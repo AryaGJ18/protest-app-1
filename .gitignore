@@ -12,3 +12,7 @@ web-build/
 # macOS
 .DS_Store
 ._.git
+
+firebaseConfig.tsx
+google-services.json
+googleservice-info.plist

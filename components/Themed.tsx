@@ -3,11 +3,15 @@ import {
   Text as DefaultText,
   View as DefaultView,
   TouchableOpacity as DefaultButton,
+  FlatList as DefaultSectionList,
+  TextInput as DefaultTextInput,
+  ScrollView as DefaultScrollView,
 } from "react-native";
 
 import Colors from "../constants/Colors";
 import useColorScheme from "../hooks/useColorScheme";
 import { Theme } from "@react-navigation/native";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 export function useThemeColor(
   props: { light?: string; dark?: string },
@@ -32,6 +36,20 @@ export type TextProps = ThemeProps & DefaultText["props"];
 export type ViewProps = ThemeProps & DefaultView["props"];
 export type ButtonProps = ThemeProps &
   DefaultButton["props"] & { title?: string; contrastBg?: boolean };
+export type ListProps = ThemeProps & DefaultSectionList["props"];
+export type InputProps = ThemeProps & DefaultTextInput["props"];
+export type ScrollViewProps = ThemeProps & DefaultScrollView["props"];
+export function ScrollView(props: ViewProps) {
+  const { style, lightColor, darkColor, ...otherProps } = props;
+  const backgroundColor = useThemeColor(
+    { light: lightColor, dark: darkColor },
+    "background"
+  );
+
+  return (
+    <DefaultScrollView style={[{ backgroundColor }, style]} {...otherProps} />
+  );
+}
 
 export function Text(props: TextProps) {
   const { style, lightColor, darkColor, ...otherProps } = props;
@@ -39,7 +57,7 @@ export function Text(props: TextProps) {
 
   return (
     <DefaultText style={[{ color }, style]} {...otherProps}>
-      {props.children != null ? props.children + " " : ""}
+      {props.children != null ? props.children + "  " : ""}
     </DefaultText>
   );
 }
@@ -55,7 +73,7 @@ export function Button(props: ButtonProps) {
   );
   const bg = color == lightColor ? darkColor : lightColor;
   return (
-    <DefaultButton
+    <TouchableOpacity
       style={{
         alignItems: "center",
         backgroundColor: bg,
@@ -64,10 +82,8 @@ export function Button(props: ButtonProps) {
       }}
       {...otherProps}
     >
-      <Text style={[{ color }, style]} {...otherProps}>
-        {otherProps.title}
-      </Text>
-    </DefaultButton>
+      <Text style={[{ color }, style]}>{otherProps.title}</Text>
+    </TouchableOpacity>
   );
 }
 
@@ -79,6 +95,33 @@ export function View(props: ViewProps) {
   );
 
   return <DefaultView style={[{ backgroundColor }, style]} {...otherProps} />;
+}
+
+export function TextInput(props: InputProps) {
+  const { style, lightColor, darkColor, ...otherProps } = props;
+  const textColor = useThemeColor(
+    { light: lightColor, dark: darkColor },
+    "text"
+  );
+  const backgroundColor = useThemeColor(
+    { light: lightColor, dark: darkColor },
+    "background"
+  );
+
+  return (
+    <DefaultTextInput style={[{ backgroundColor }, style]} {...otherProps} />
+  );
+}
+
+export function SectionList(props: ListProps) {
+  const { style, lightColor, darkColor, ...otherProps } = props;
+  const backgroundColor = useThemeColor(
+    { light: lightColor, dark: darkColor },
+    "background"
+  );
+  return (
+    <DefaultSectionList style={[{ backgroundColor }, style]} {...otherProps} />
+  );
 }
 
 interface RGB {

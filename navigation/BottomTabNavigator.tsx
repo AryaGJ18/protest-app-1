@@ -1,4 +1,5 @@
-import { Ionicons } from "@expo/vector-icons";
+import { AntDesign } from "@expo/vector-icons";
+import { Entypo } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
 import { Alert } from "react-native";
@@ -7,10 +8,12 @@ import * as Themed from "../components/Themed";
 import * as Nav from "./NavActions";
 import Colors from "../constants/Colors";
 import useColorScheme from "../hooks/useColorScheme";
-import TabOneScreen from "../screens/TabOneScreen";
+import LocalProtests from "../screens/LocalProtests";
 import TabTwoScreen from "../screens/TabTwoScreen";
 import { BottomTabParamList, TabOneParamList, TabTwoParamList } from "../types";
-
+import NewEventScreen from "../screens/NewEventScreen";
+import * as firebase from "firebase";
+import "firebase/auth";
 const BottomTab = createBottomTabNavigator<BottomTabParamList>();
 
 export default function BottomTabNavigator() {
@@ -22,23 +25,28 @@ export default function BottomTabNavigator() {
       tabBarOptions={{ activeTintColor: Colors[colorScheme].tint }}
     >
       <BottomTab.Screen
-        name="TabOne"
+        name="Protests"
         component={TabOneNavigator}
         options={{
           tabBarIcon: ({ color }) => (
-            <TabBarIcon name="ios-code" color={color} />
+            <Entypo name="list" size={24} color={color} />
           ),
         }}
       />
-      <BottomTab.Screen
-        name="TabTwo"
-        component={TabTwoNavigator}
-        options={{
-          tabBarIcon: ({ color }) => (
-            <TabBarIcon name="ios-code" color={color} />
-          ),
-        }}
-      />
+      {firebase.auth().currentUser != null &&
+      !firebase.auth().currentUser.isAnonymous ? (
+        <BottomTab.Screen
+          name="New Protest"
+          component={TabTwoNavigator}
+          options={{
+            tabBarIcon: ({ color }) => (
+              <AntDesign name="plus" size={24} color={color} />
+            ),
+          }}
+        />
+      ) : (
+        <></>
+      )}
     </BottomTab.Navigator>
   );
 }
@@ -69,10 +77,10 @@ function TabOneNavigator(props) {
   return (
     <TabOneStack.Navigator>
       <TabOneStack.Screen
-        name="TabOneScreen"
-        component={TabOneScreen}
+        name="Protests"
+        component={LocalProtests}
         options={{
-          headerTitle: "Tab One Title",
+          headerTitle: "Local Protests",
           headerRight: () => (
             <Themed.Button
               title="Sign Out"
@@ -92,9 +100,9 @@ function TabTwoNavigator() {
   return (
     <TabTwoStack.Navigator>
       <TabTwoStack.Screen
-        name="TabTwoScreen"
-        component={TabTwoScreen}
-        options={{ headerTitle: "Tab Two Title" }}
+        name="New Protest"
+        component={NewEventScreen}
+        options={{ headerTitle: "New Protest" }}
       />
     </TabTwoStack.Navigator>
   );

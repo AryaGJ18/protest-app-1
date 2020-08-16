@@ -1,27 +1,20 @@
 import * as React from "react";
-import { StyleSheet } from "react-native";
+import { StyleSheet, KeyboardAvoidingView } from "react-native";
 import * as Themed from "../components/Themed";
 import EditScreenInfo from "../components/EditScreenInfo";
 import { Text, View } from "../components/Themed";
 import * as Nav from "../navigation/NavActions";
+import LoginScreen from "./LoginScreenComponents/LoginScreen";
+
 export default function NewUserScreen(props) {
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Testing</Text>
-      <View
-        style={styles.separator}
-        lightColor="#eee"
-        darkColor="rgba(255,255,255,0.1)"
-      />
-      <EditScreenInfo path="/screens/TabOneScreen.tsx" />
-      <Themed.Button
-        title="Hello"
-        contrastBg
-        onPress={() => props.navigation.dispatch(Nav.resetToMainPage)}
-        lightColor="#000"
-        darkColor="rgba(255,255,255,1)"
-      />
-    </View>
+    <KeyboardAvoidingView style={styles.container} behavior="padding">
+      <View style={styles.container}>
+        <View style={styles.login}>
+          <LoginScreen navigation={props.navigation} />
+        </View>
+      </View>
+    </KeyboardAvoidingView>
   );
 }
 
@@ -40,6 +33,11 @@ const styles = StyleSheet.create({
   separator: {
     marginVertical: 30,
     height: 1,
-    width: "80%",
+    width: "90%",
+  },
+  login: {
+    flex: 1,
+    justifyContent: "center",
+    alignSelf: "center",
   },
 });

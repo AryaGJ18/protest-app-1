@@ -1,7 +1,9 @@
 import { CommonActions } from "@react-navigation/native";
+import * as firebase from "firebase";
+import "@firebase/auth";
 
 export function signInAction(navigation) {
-  navigation.dispatch(resetToMainPage);
+  // navigation.dispatch(resetToMainPage);
   // TODO: Implement sign out action for user
 }
 
@@ -11,8 +13,14 @@ export const resetToMainPage = CommonActions.reset({
 });
 
 export function signOutAction(navigation) {
-  navigation.dispatch(resetToSignIn);
-  // TODO: Implement sign in action for user
+  var curr = firebase.auth().currentUser;
+  if (curr.isAnonymous) {
+    curr.delete();
+  } else {
+    firebase.auth().signOut();
+  }
+  // signOut();
+  // navigation.dispatch(resetToSignIn);
 }
 
 export const resetToSignIn = CommonActions.reset({
